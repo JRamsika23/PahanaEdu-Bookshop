@@ -21,9 +21,8 @@ import java.util.List;
 @WebServlet(name = "Cart", urlPatterns = {"/Cart"})
 public class Cart extends HttpServlet {
 
-
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
@@ -58,4 +57,3 @@ public class Cart extends HttpServlet {
         response.sendRedirect("Cart.jsp");
     }
 }
-

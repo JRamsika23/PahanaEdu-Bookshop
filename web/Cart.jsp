@@ -15,8 +15,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff; /* Light blue background */
-            color: #333; /* Dark text color */
+            background-color: #f0f8ff; 
+            color: #333; 
         }
         table {
             width: 80%;
@@ -30,28 +30,28 @@
             text-align: center;
         }
         th {
-            background-color: #007bff; /* Blue header */
-            color: white; /* White text for header */
+            background-color: #007bff; 
+            color: white; 
         }
         tr:nth-child(even) {
-            background-color: #f2f2f2; /* Light gray for even rows */
+            background-color: #f2f2f2; 
         }
         tr:hover {
-            background-color: #ffcccc; /* Light red on hover */
+            background-color: #ffcccc; 
         }
         h1 {
             text-align: center;
-            color: #d9534f; /* Red title */
+            color: #d9534f; 
         }
         .total {
             font-weight: bold;
-            background-color: #007bff; /* Blue total row */
-            color: white; /* White text for total */
+            background-color: #007bff; 
+            color: white; 
         }
         .empty-cart {
             text-align: center;
             font-size: 1.2em;
-            color: #d9534f; /* Red text for empty cart message */
+            color: #d9534f; 
         }
     </style>
 </head>
@@ -87,6 +87,16 @@
                 <td class="total">$<%= total %></td>
             </tr>
         </table>
+            
+            <!-- Payment button -->
+<form action="Cart" method="get" style="text-align:center; margin-top:15px;">
+    <input type="hidden" name="action" value="pay">
+    <button type="submit"
+            style="background-color:#d9534f; color:white; border:none;
+                   padding:10px 20px; border-radius:5px; cursor:pointer;">
+        Proceed to Payment
+    </button>
+</form>
     <% } %>
 </body>
 </html>
