@@ -21,8 +21,8 @@ import java.util.List;
 @WebServlet(name = "Cart", urlPatterns = {"/Cart"})
 public class Cart extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+       @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
@@ -31,29 +31,30 @@ public class Cart extends HttpServlet {
         if ("add".equals(action)) {
             int bookId = Integer.parseInt(request.getParameter("bookId"));
 
-            // Get the cart from session or create a new one
             List<Book> cart = (List<Book>) session.getAttribute("cart");
             if (cart == null) {
                 cart = new ArrayList<>();
             }
 
-            // Get book details from DB
             BookDAO bookDAO = new BookDAO();
             Book book = bookDAO.getBookById(bookId);
-
             if (book != null) {
-                cart.add(book); // Add book to cart
+                cart.add(book);
             }
 
-            // Save back to session
             session.setAttribute("cart", cart);
-
-            // Redirect to cart page
             response.sendRedirect("Cart.jsp");
+            return;
+        } 
+        // --- NEW PAYMENT ACTION -----------
+        else if ("pay".equals(action)) {
+            // you can add some validation here if needed (e.g. cart is empty?)
+
+            // Redirect to a payment page
+            response.sendRedirect("Payment.jsp");
             return;
         }
 
-        // If no action, just go to cart page
         response.sendRedirect("Cart.jsp");
     }
 }
