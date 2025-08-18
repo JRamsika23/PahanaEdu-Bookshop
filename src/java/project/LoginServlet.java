@@ -31,26 +31,25 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String password = request.getParameter("password");  
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(
-                "SELECT * FROM users WHERE username = ? AND password = ?")) {
+                "SELECT * FROM users WHERE username = ? AND password_hash = ?")) {
 
             ps.setString(1, username);
-            ps.setString(2, password);
-
-            ResultSet rs = (ResultSet) ps.executeQuery();
+            ps.setString(2, password); 
+            ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 String role = rs.getString("role");
-               request.getSession().setAttribute("username", username);
+                request.getSession().setAttribute("username", username);
                 request.getSession().setAttribute("role", role);
-                
-                 if ("Admin".equalsIgnoreCase(role)) {
+
+                if ("Admin".equalsIgnoreCase(role)) {
                     response.sendRedirect("AdminHome.jsp");
                 } else {
                     response.sendRedirect("Home.jsp");

@@ -6,6 +6,8 @@ package project;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -72,9 +74,13 @@ public User( String username, String email, String password, String role) {
     public void setUsername(String username) {
         this.username = username;
     }
-    public void setPassword(String password) throws NoSuchAlgorithmException {
-        this.password = hashPassword(password); // Implement hashPassword method
-    }
+    public void setPassword(String password) {
+        try {
+            this.password = hashPassword(password);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+}  
     public void setEmail(String email) {
         this.email = email;
     }

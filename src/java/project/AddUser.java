@@ -22,41 +22,39 @@ public class AddUser extends HttpServlet {
     
           protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            String email = request.getParameter("email");
-            String role = request.getParameter("role");
-            // Basic validation (more comprehensive validation needed as per Task B)
-            if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-                request.setAttribute("errorMessage", "Username and password cannot be empty.");
-                request.getRequestDispatcher("AddUser.jsp").forward(request, response);
-                return;
-            }
+         String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        String role = request.getParameter("role");
+
+        // Basic validation
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            request.setAttribute("errorMessage", "Username and password cannot be empty.");
+            request.getRequestDispatcher("AddUser.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            // Hash password (User.setPassword will auto-hash)
+            User newUser = new User(username, email, password, role);
             
-                        // Hash the password before storing (essential for security)
-            String hashedPassword = PasswordHasher.hashPassword(password); // Assuming you have a PasswordHasher utility
-            try (Connection conn = DBUtil.getConnection()) { // Assuming you have a DatabaseUtil
-                String sql = "INSERT INTO users (username, password_hash, email, role) VALUES (?, ?, ?, ?)";
-                PreparedStatement statement = conn.prepareStatement(sql);
-                statement.setString(1, username);
-                statement.setString(2, hashedPassword);
-                statement.setString(3, email);
-                statement.setString(4, role);
-                int rowsAffected = statement.executeUpdate();
-                if (rowsAffected > 0) {
-                    response.sendRedirect("adminDashboard.jsp?message=User added successfully!");
-                } else {
-                    request.setAttribute("errorMessage", "Failed to add user.");
-                    request.getRequestDispatcher("AddUser.jsp").forward(request, response);
-                }
-                
-                           } catch (Exception e) {
-                e.printStackTrace();
-                request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            UserDAO userDAO = new UserDAO();
+            boolean inserted = userDAO.insertUser(newUser);
+
+            if (inserted) {
+                response.sendRedirect("ViewUser"); // Redirect to user list
+            } else {
+                request.setAttribute("errorMessage", "Failed to add user.");
                 request.getRequestDispatcher("AddUser.jsp").forward(request, response);
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("AddUser.jsp").forward(request, response);
         }
     }
+}
     
     
     

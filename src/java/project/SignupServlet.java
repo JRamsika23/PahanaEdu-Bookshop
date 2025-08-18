@@ -28,20 +28,20 @@ public class SignupServlet extends HttpServlet {
    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+       String username = request.getParameter("username");
+        String password = request.getParameter("password"); // plain text for now
         String email = request.getParameter("email");
         String role = request.getParameter("role");
 
-     response.setContentType("text/html");
+        response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         try (Connection con = DBUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(
-                "INSERT INTO users (username, password,email, role) VALUES (?, ?, ?, ?)")) {
+                "INSERT INTO users (username, password_hash, email, role) VALUES (?, ?, ?, ?)")) {
 
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, password); // later change to hashed password
             ps.setString(3, email);
             ps.setString(4, role);
 

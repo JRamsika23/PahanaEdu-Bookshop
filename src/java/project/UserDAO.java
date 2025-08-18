@@ -18,8 +18,8 @@ import java.util.List;
 
 public class UserDAO { 
 
-    private static final String INSERT_USER = "INSERT INTO users(username, email, password, role) VALUES(?,?,?,?)";
-    private static final String UPDATE_USER = "UPDATE users SET username=?, email=?, password=?, role=? WHERE id=?";
+  private static final String INSERT_USER = "INSERT INTO users(username, email, password_hash, role) VALUES(?,?,?,?)";
+    private static final String UPDATE_USER = "UPDATE users SET username=?, email=?, password_hash=?, role=? WHERE id=?";
     private static final String DELETE_USER = "DELETE FROM users WHERE id=?";
     private static final String SELECT_ALL_USERS = "SELECT * FROM users";
     private static final String SELECT_USER_BY_ID = "SELECT * FROM users WHERE id=?";
@@ -30,7 +30,7 @@ public class UserDAO {
             
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword());
+            stmt.setString(3, user.getPassword()); // password is already hashed in User class
             stmt.setString(4, user.getRole());
             
             return stmt.executeUpdate() > 0;
@@ -52,7 +52,7 @@ public class UserDAO {
                     rs.getInt("id"),
                     rs.getString("username"),
                     rs.getString("email"),
-                    rs.getString("password"),
+                    rs.getString("password_hash"), // FIXED: use password_hash
                     rs.getString("role")
                 ));
             }
@@ -104,7 +104,7 @@ public class UserDAO {
                     rs.getInt("id"),
                     rs.getString("username"),
                     rs.getString("email"),
-                    rs.getString("password"),
+                    rs.getString("password_hash"), // FIXED
                     rs.getString("role")
                 );
             }
