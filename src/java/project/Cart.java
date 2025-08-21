@@ -21,40 +21,48 @@ import java.util.List;
 @WebServlet(name = "Cart", urlPatterns = {"/Cart"})
 public class Cart extends HttpServlet {
 
-       @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
 
-        if ("add".equals(action)) {
-            int bookId = Integer.parseInt(request.getParameter("bookId"));
-
-            List<Book> cart = (List<Book>) session.getAttribute("cart");
-            if (cart == null) {
-                cart = new ArrayList<>();
-            }
-
-            BookDAO bookDAO = new BookDAO();
-            Book book = bookDAO.getBookById(bookId);
-            if (book != null) {
-                cart.add(book);
-            }
-
+        // Initialize cart if it doesn't exist
+        List<Book> cart = (List<Book>) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new ArrayList<>();
             session.setAttribute("cart", cart);
-            response.sendRedirect("Cart.jsp");
-            return;
-        } 
-        // --- NEW PAYMENT ACTION -----------
-        else if ("pay".equals(action)) {
-            // you can add some validation here if needed (e.g. cart is empty?)
-
-            // Redirect to a payment page
-            response.sendRedirect("Payment.jsp");
-            return;
         }
 
+        if (null != action) switch (action) {
+            case "add":
+            {
+                int bookId = Integer.parseInt(request.getParameter("bookId"));
+                BookDAO bookDAO = new BookDAO();
+                Book book = bookDAO.getBookById(bookId);
+                if (book != null) {
+                    cart.add(book);
+                    session.setAttribute("cartCount", cart.size()); // Update cart count
+                }
+                response.sendRedirect("Cart.jsp");
+                return;
+            }
+            case "pay":
+                response.sendRedirect("Payment.jsp");
+                return;
+            case "remove":
+            {
+                int bookId = Integer.parseInt(request.getParameter("bookId"));
+                cart.removeIf(book -> book.getId() == bookId); // Remove the book
+                session.setAttribute("cartCount", cart.size()); // Update cart count
+                response.sendRedirect("Cart.jsp");
+                return;
+            }
+            default:
+                break;
+        }
+
+        // Default redirect to Cart.jsp
         response.sendRedirect("Cart.jsp");
     }
 }

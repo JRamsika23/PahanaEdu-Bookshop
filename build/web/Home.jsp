@@ -185,7 +185,7 @@
             background-color: var(--primary-red);
         }
         
-        /* Toast Message - CSS Only */
+
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -233,25 +233,22 @@
         </div>
     </header>
     
-<nav>
-    <ul class="nav-links">
-        <li><a href="Home.jsp">Home</a></li>
-        <li><a href="books.jsp">Books</a></li>
-        <li><a href="Cart.jsp">Cart (0)</a></li>
-        
-        <% if (username != null) { %>
-            <li><a href="Logout.jsp">Logout</a></li>
-        <% } else { %>
-             <li style="margin-left: auto;"><a href="index.jsp" class="login-btn">Login</a></li>
-        <% } %>
-        
-         
-    </ul>
-</nav>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="Home.jsp">Home</a></li>
+            <li><a href="books.jsp">Books</a></li>
+            <li><a href="Cart.jsp">Cart (<%= session.getAttribute("cartCount") != null ? session.getAttribute("cartCount") : 0 %>)</a></li>
+            <% if (username != null) { %>
+                <li><a href="Logout.jsp">Logout</a></li>
+            <% } else { %>
+                <li style="margin-left: auto;"><a href="index.jsp" class="login-btn">Login</a></li>
+            <% } %>
+        </ul>
+    </nav>
     
-   <div class="dashboard">
-    <h2 class="section-title">Featured Books</h2>
-    <div class="books-grid">
+    <div class="dashboard">
+        <h2 class="section-title">Featured Books</h2>
+        <div class="books-grid">
             <%
                 BookDAO bookDAO = new BookDAO();
                 List<Book> books = bookDAO.getAllBooks();
@@ -265,19 +262,18 @@
                     <h3 class="book-title"><%= book.getTitle() %></h3>
                     <p class="book-author"><%= book.getAuthor() %></p>
                     <p class="book-price">$<%= book.getPrice() %></p>
-                <form action="Cart" method="get">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="bookId" value="<%= book.getId() %>">
-                    <button type="submit" class="add-to-cart">Add to Cart</button>
-                </form>
+                    <form action="Cart" method="get">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="bookId" value="<%= book.getId() %>">
+                        <button type="submit" class="add-to-cart">Add to Cart</button>
+                    </form>
                 </div>
             </div>
-        <% } %>
+            <% } %>
+        </div>
     </div>
-</div>
     
-    
-    <!-- Login Success Toast - CSS Only Version -->
+    <!-- Login Success Toast -->
     <% 
         String loginSuccess = (String) session.getAttribute("loginSuccess");
         if (loginSuccess != null) {
@@ -291,6 +287,7 @@
         %>
     <% } %>
 
+    <!-- Logout Success Toast -->
     <% 
         String logoutSuccess = (String) session.getAttribute("logoutSuccess");
         if (logoutSuccess != null) {

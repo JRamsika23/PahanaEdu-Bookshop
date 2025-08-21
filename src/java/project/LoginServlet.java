@@ -48,6 +48,7 @@ public class LoginServlet extends HttpServlet {
                 String role = rs.getString("role");
                 request.getSession().setAttribute("username", username);
                 request.getSession().setAttribute("role", role);
+                request.getSession().setAttribute("loginSuccess", "Login successful!");
 
                 if ("Admin".equalsIgnoreCase(role)) {
                     response.sendRedirect("AdminHome.jsp");

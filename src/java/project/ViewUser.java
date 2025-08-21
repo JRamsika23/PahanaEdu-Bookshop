@@ -31,7 +31,7 @@ public class ViewUser extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         List<User> users = userDAO.getAllUsers();
         
-        request.setAttribute("userList", users);
-        request.getRequestDispatcher("/ViewUser.jsp").forward(request, response);
+        request.setAttribute("users", users);
+        request.getRequestDispatcher("ViewUser.jsp").forward(request, response);
     }
 }
